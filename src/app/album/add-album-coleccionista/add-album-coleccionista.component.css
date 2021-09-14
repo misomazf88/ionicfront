@@ -1,0 +1,20 @@
+.form-div {
+  display: flex;
+  flex-direction: column;
+}
+.form-body {
+  display: flex;
+  flex-direction: column;
+}
+.form-select {
+  display: flex;
+  flex-direction: column;
+}
+.form-footer {
+  display: flex;
+  justify-content: flex-end;
+
+}
+.btn-prop {
+  margin: 5px;
+}

@@ -1,0 +1,32 @@
+<div >
+  <h1>Compartir Canción</h1>
+  <div class="form-div">
+    <div class="form-body">
+      <form >
+        <label for="collecionistas"> Coleccionistas </label>
+        <select name="coleccionistas" id="coleccionistas" [(ngModel)]="usuarioSelected" class="form-select">
+          <option *ngFor="let coleccionista of usuariosFiltered"  [value]="coleccionista.id">
+            {{coleccionista.nombre}}
+          </option>
+        </select>
+      </form>
+
+    </div>
+    <div class="form-footer">
+      <div>
+        <button  class="btn btn-danger btn-prop" (click)="returnColeccionistaDetails()" > Cancelar</button>
+        <button  class="btn btn-primary btn-prop"  (click)="addColeccionista()">Guardar</button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- <mat-form-field appearance="fill">
+    <mat-label>Coleccionistas</mat-label>
+    <mat-select [(ngModel)]="usuarioSelected"  name="coleccionista">
+      <mat-option *ngFor="let coleccionista of usuariosFiltered" [value]="coleccionista.id">
+        {{coleccionista.nombre}}
+      </mat-option>
+    </mat-select>
+  </mat-form-field> -->
+</div>

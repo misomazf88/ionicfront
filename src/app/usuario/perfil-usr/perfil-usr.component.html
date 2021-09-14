@@ -1,0 +1,102 @@
+<div class ="container my-1">
+  <h1>Mi Perfil Coleccionista</h1>
+  <div *ngIf="canciones !== null  && usuarios !== null  && cancionesUsuario !== null" >
+    <mat-accordion>
+      <mat-expansion-panel >
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+             Mis Canciones
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+          <table mat-table [dataSource]="cancionesUsuario"  class="mat-elevation-z8 table-content">
+            <ng-container matColumnDef="titulo">
+              <th mat-header-cell *matHeaderCellDef class="table-column-header"> Código </th>
+              <td mat-cell *matCellDef="let cancion" class="table-value"> {{cancion.titulo}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="interprete">
+              <th mat-header-cell *matHeaderCellDef class="table-column-header">  Descripción </th>
+              <td mat-cell *matCellDef="let cancion" class="table-value"> {{cancion.interprete}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef= "duracion">
+              <th mat-header-cell *matHeaderCellDef class="table-column-header"> Precio </th>
+              <td mat-cell *matCellDef="let cancion" class="table-value"> <p>{{cancion.minutos}} minutos : {{ cancion.segundos }} segundos</p> </td>
+            </ng-container>
+
+            <ng-container matColumnDef= "usuariosCompartidos">
+              <th mat-header-cell *matHeaderCellDef class="table-column-header"> Usuarios Compartidos </th>
+              <td mat-cell *matCellDef="let cancion" class="table-value">
+                <select>
+                  <option *ngFor="let idCollecionista of cancion.usuariosCompartidos"  [value]="idCollecionista">
+                    {{usuarios[idCollecionista -1].nombre}}
+                  </option>
+                </select>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="acciones">
+              <th mat-header-cell *matHeaderCellDef class="table-column-header"> Acciones </th>
+              <td mat-cell *matCellDef="let cancion"  class="table-value">
+                <button mat-raised-button class="btn btn-primary"  focusable="false" (click)="agregarColeccionista(cancion.id)">
+                  Agregar Coleccionista
+                </button>
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="columnas"></tr>
+            <tr mat-row *matRowDef="let row; columns: columnas;"></tr>
+          </table>
+      </mat-expansion-panel>
+    </mat-accordion>
+
+    <mat-accordion>
+      <mat-expansion-panel >
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            Mis Albumes
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+          <table mat-table [dataSource]="albumesUsuario"  class="mat-elevation-z8 table-content">
+            <ng-container matColumnDef="titulo">
+              <th mat-header-cell *matHeaderCellDef class="table-column-header"> Titulo </th>
+              <td mat-cell *matCellDef="let album" class="table-value"> {{album.titulo}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="interprete">
+              <th mat-header-cell *matHeaderCellDef class="table-column-header">  Año lanzamiento </th>
+              <td mat-cell *matCellDef="let album" class="table-value"> {{album.anio}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef= "duracion">
+              <th mat-header-cell *matHeaderCellDef class="table-column-header"> Descripción </th>
+              <td mat-cell *matCellDef="let album" class="table-value"> <p>{{album.descripcion}}</p> </td>
+            </ng-container>
+
+            <ng-container matColumnDef= "usuariosCompartidos">
+              <th mat-header-cell *matHeaderCellDef class="table-column-header"> Usuarios Compartidos </th>
+              <td mat-cell *matCellDef="let album" class="table-value">
+                <select>
+                  <option *ngFor="let idCollecionista of album.usuarios"  [value]="idCollecionista">
+                    {{usuarios[idCollecionista -1].nombre}}
+                  </option>
+                </select>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="acciones">
+              <th mat-header-cell *matHeaderCellDef class="table-column-header"> Acciones </th>
+              <td mat-cell *matCellDef="let album"  class="table-value">
+                <button mat-raised-button class="btn btn-primary"  focusable="false" (click)="agregarColeccionistaAlbum(album.id)">
+                  Agregar Coleccionista
+                </button>
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="columnas"></tr>
+            <tr mat-row *matRowDef="let row; columns: columnas;"></tr>
+          </table>
+      </mat-expansion-panel>
+    </mat-accordion>
+  </div >
+</div>
