@@ -1,15 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ToastrService } from "ngx-toastr";
+import { ToastrService } from 'ngx-toastr';
 import { Album, Cancion } from '../album';
 import { AlbumService } from '../album.service';
 
 @Component({
-  selector: 'app-album-list',
-  templateUrl: './album-list.component.html',
-  styleUrls: ['./album-list.component.css']
+  selector: 'app-filter-album',
+  templateUrl: './filter-album.component.html',
+  styleUrls: ['./filter-album.component.css']
 })
-export class AlbumListComponent implements OnInit {
+export class FilterAlbumComponent implements OnInit {
 
   constructor(
     private albumService: AlbumService,
@@ -20,18 +20,20 @@ export class AlbumListComponent implements OnInit {
 
   userId: number
   token: string
-  albumes: Array<Album>
-  mostrarAlbumes: Array<Album>
-  albumSeleccionado: Album
-  indiceSeleccionado: number
+  albumes: Array<Album>;
+  albumesFiltrados: Array<Album>;
+  filtro: string;
+  albumSeleccionado: Album;
+  columnas: string[] = ['titulo', 'anno', 'descripcion','medio'];
 
-  ngOnInit() {
+  ngOnInit(): void {
     if(!parseInt(this.router.snapshot.params.userId) || this.router.snapshot.params.userToken === " "){
       this.showError("No hemos podido identificarlo, por favor vuelva a iniciar sesión.")
     }
     else{
-      this.userId = parseInt(this.router.snapshot.params.userId)
-      this.token = this.router.snapshot.params.userToken
+      this.filtro = "";
+      this.userId = parseInt(this.router.snapshot.params.userId);
+      this.token = this.router.snapshot.params.userToken;
       this.getAlbumes();
     }
   }
@@ -39,10 +41,10 @@ export class AlbumListComponent implements OnInit {
   getAlbumes():void{
     this.albumService.getAlbumes(this.userId, this.token)
     .subscribe(albumes => {
-      this.albumes = albumes
-      this.mostrarAlbumes = albumes
-      if(albumes.length>0){
-        this.onSelect(this.mostrarAlbumes[0], 0)
+      this.albumes = albumes;
+      this.albumesFiltrados = albumes;
+      if(this.albumes.length > 0) {
+        this.albumSeleccionado.id = -1;
       }
     },
     error => {
@@ -57,22 +59,7 @@ export class AlbumListComponent implements OnInit {
         this.showError("Ha ocurrido un error. " + error.message)
       }
     })
-
   }
-
-  onSelect(a: Album, index: number){
-    this.indiceSeleccionado = index
-    this.albumSeleccionado = a
-    this.albumService.getCancionesAlbum(a.id, this.token)
-    .subscribe(canciones => {
-      this.albumSeleccionado.canciones = canciones
-      this.albumSeleccionado.interpretes = this.getInterpretes(canciones)
-    },
-    error =>{
-      this.showError("Ha ocurrido un error, " + error.message)
-    })
-  }
-
   getInterpretes(canciones: Array<Cancion>): Array<string>{
     var interpretes: Array<string> = []
     canciones.map( c => {
@@ -83,21 +70,21 @@ export class AlbumListComponent implements OnInit {
     return interpretes
   }
 
-  buscarAlbum(busqueda: string){
-    let albumesBusqueda: Array<Album> = []
-    this.albumes.map( albu => {
-      if( albu.titulo.toLocaleLowerCase().includes(busqueda.toLowerCase())){
-        albumesBusqueda.push(albu)
-      }
-    })
-    this.mostrarAlbumes = albumesBusqueda
+  filtrarCanciones(event : any): void {
+      this.filtro = event.target.value;
+      this.albumesFiltrados = this.albumes.filter( album => album.titulo.includes(this.filtro))
   }
 
-  irCrearAlbum(){
-    this.routerPath.navigate([`/albumes/create/${this.userId}/${this.token}`])
-  }
-  consultarAlbumes(){
-    this.routerPath.navigate([`/albumes/filtrar-album/${this.userId}/${this.token}`])
+  getAlbum(row: Album) {
+    this.albumSeleccionado = row;
+    this.albumService.getCancionesAlbum(this.albumSeleccionado.id, this.token)
+    .subscribe(canciones => {
+      this.albumSeleccionado.canciones = canciones
+      this.albumSeleccionado.interpretes = this.getInterpretes(canciones)
+    },
+    error =>{
+      this.showError("Ha ocurrido un error, " + error.message)
+    })
   }
 
   eliminarAlbum(){
@@ -120,6 +107,10 @@ export class AlbumListComponent implements OnInit {
     this.ngOnInit()
   }
 
+  regresar() {
+    this.routerPath.navigate([`/albumes/${this.userId}/${this.token}`]);
+  }
+
   showError(error: string){
     this.toastr.error(error, "Error de autenticación")
   }
@@ -131,4 +122,5 @@ export class AlbumListComponent implements OnInit {
   showSuccess() {
     this.toastr.success(`El album fue eliminado`, "Eliminado exitosamente");
   }
+
 }

@@ -9,7 +9,7 @@ import { Album } from '../album/album';
 })
 export class CancionService {
 
-  private backUrl: string = "https://backionic31.herokuapp.com/"
+  private backUrl: string = "http://localhost:5000"
 
   constructor(private http: HttpClient) { }
 
@@ -20,7 +20,7 @@ export class CancionService {
     return this.http.get<Cancion[]>(`${this.backUrl}/album/${idAlbum}/canciones`, {headers: headers})
   }
 
-  getCanciones(): Observable<Cancion[]>{
+  getSongs(): Observable<Cancion[]>{
     return this.http.get<Cancion[]>(`${this.backUrl}/canciones`)
   }
 
@@ -43,8 +43,21 @@ export class CancionService {
   eliminarCancion(cancionId: number): Observable<Cancion>{
     return this.http.delete<Cancion>(`${this.backUrl}/cancion/${cancionId}`)
   }
+
   agregarColeccionista(cancionId: number, coleccionistaId:number): Observable<boolean> {
     return this.http.get<boolean>(`${this.backUrl}/cancion/agregar-coleccionista/${cancionId}/${coleccionistaId}`)
+  }
+
+  addFavoriteSong(cancion: Cancion, usuarioId: number): Observable<Cancion> {
+    return this.http.post<Cancion>(`${this.backUrl}/usuario/${usuarioId}/canciones`,cancion)
+  }
+
+  getFavoriteSongs(usuarioId: number): Observable<Cancion[]>{
+    return this.http.get<Cancion[]>(`${this.backUrl}/usuario/${usuarioId}/canciones`)
+  }
+
+  deleteFavoriteSong(idCancion: number, usuarioId: number): Observable<boolean> {
+    return this.http.delete<boolean>(`${this.backUrl}/usuario/${usuarioId}/canciones/${idCancion}`)
   }
 
 }

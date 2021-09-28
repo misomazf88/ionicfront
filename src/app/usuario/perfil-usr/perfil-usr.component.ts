@@ -17,11 +17,14 @@ export class PerfilUsrComponent implements OnInit {
 
   userId: number;
   token: string;
+  cancionId: number;
   usuarios: Array<Usuario>;
   canciones: Array<Cancion>;
   albumes: Array<Album>;
   cancionesUsuario: Array<Cancion>;
+  cancionesFavoritas: Array<Cancion>;
   columnas: string[] = ['titulo', 'interprete', 'duracion','usuariosCompartidos', 'acciones'];
+  columnasFavoritas: String[] = ['titulo', 'interprete', 'duracion', 'acciones'];
   albumesUsuario: Array<Album>;
 
 
@@ -50,6 +53,7 @@ export class PerfilUsrComponent implements OnInit {
       this.getCanciones();
       this.getAlbumes();
       this.getUsuarios();
+      this.getFavoriteSongs();
     }
   }
 
@@ -58,10 +62,17 @@ export class PerfilUsrComponent implements OnInit {
   }
 
   getCanciones():void{
-    this.cancionService.getCanciones()
+    this.cancionService.getSongs()
     .subscribe(canciones => {
       this.canciones= canciones;
       this.cancionesUsuario = this.canciones.filter( (cancion : Cancion) => cancion.coleccionista === this.userId)
+    })
+  }
+
+  getFavoriteSongs():void{
+    this.cancionService.getFavoriteSongs(this.userId)
+    .subscribe(canciones => {
+      this.cancionesFavoritas= canciones;
     })
   }
 
@@ -86,5 +97,10 @@ export class PerfilUsrComponent implements OnInit {
     .subscribe ( usuarios => {
       this.usuarios = usuarios;
     })
+  }
+
+  goToDeleteFavorite(idCancion: number) {
+    this.cancionService.deleteFavoriteSong(idCancion, this.userId)
+    .subscribe()
   }
 }

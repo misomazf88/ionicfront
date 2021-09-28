@@ -12,6 +12,7 @@ import { UsuarioSignupComponent } from './usuario/usuario-signup/usuario-signup.
 import { PerfilUsrComponent } from './usuario/perfil-usr/perfil-usr.component';
 import { AddColeccionistaComponent } from './cancion/add-coleccionista/add-coleccionista.component';
 import { AddAlbumColeccionistaComponent} from './album/add-album-coleccionista/add-album-coleccionista.component'
+import { FilterAlbumComponent } from './album/filter-album/filter-album.component';
 
 const routes: Routes = [
   {
@@ -69,6 +70,10 @@ const routes: Routes = [
   {
     path: 'albumes/agregar-coll/:albumId/:userId/:userToken',
     component: AddAlbumColeccionistaComponent
+  },
+  {
+    path: 'albumes/filtrar-album/:userId/:userToken',
+    component: FilterAlbumComponent
   }
 ];
 

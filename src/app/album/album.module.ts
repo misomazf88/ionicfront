@@ -8,12 +8,31 @@ import { AlbumEditComponent } from './album-edit/album-edit.component';
 import { AppHeaderModule } from '../app-header/app-header.module';
 import { AlbumJoinCancionComponent } from './album-join-cancion/album-join-cancion.component';
 import { AddAlbumColeccionistaComponent } from './add-album-coleccionista/add-album-coleccionista.component';
+import { FilterAlbumComponent } from './filter-album/filter-album.component';
+import { MatTableModule } from '@angular/material/table';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
+import { MatExpansionModule } from '@angular/material/expansion';
 
 @NgModule({
-  declarations: [AlbumListComponent, AlbumDetailComponent, AlbumCreateComponent, AlbumEditComponent, AlbumJoinCancionComponent, AddAlbumColeccionistaComponent],
+  declarations: [AlbumListComponent, AlbumDetailComponent, AlbumCreateComponent, AlbumEditComponent, AlbumJoinCancionComponent, AddAlbumColeccionistaComponent, FilterAlbumComponent],
   imports: [
-    CommonModule, ReactiveFormsModule, AppHeaderModule, FormsModule
+    CommonModule,
+    ReactiveFormsModule,
+    AppHeaderModule,
+    MatTableModule,
+    MatInputModule,
+    MatButtonModule,
+    FormsModule,
+    MatExpansionModule
   ],
-  exports:[AlbumListComponent, AlbumDetailComponent, AlbumCreateComponent, AlbumEditComponent, AlbumJoinCancionComponent]
+  exports:[
+    AlbumListComponent,
+    AlbumDetailComponent,
+    AlbumCreateComponent,
+    AlbumEditComponent,
+    AlbumJoinCancionComponent,
+    FilterAlbumComponent
+  ]
 })
 export class AlbumModule { }

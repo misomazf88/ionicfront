@@ -5,23 +5,23 @@
       <mat-expansion-panel >
         <mat-expansion-panel-header>
           <mat-panel-title>
-             Mis Canciones
+             Mis Canciones Agregadas
           </mat-panel-title>
         </mat-expansion-panel-header>
           <table mat-table [dataSource]="cancionesUsuario"  class="mat-elevation-z8 table-content">
             <ng-container matColumnDef="titulo">
-              <th mat-header-cell *matHeaderCellDef class="table-column-header"> Código </th>
+              <th mat-header-cell *matHeaderCellDef class="table-column-header"> Título </th>
               <td mat-cell *matCellDef="let cancion" class="table-value"> {{cancion.titulo}} </td>
             </ng-container>
 
             <ng-container matColumnDef="interprete">
-              <th mat-header-cell *matHeaderCellDef class="table-column-header">  Descripción </th>
+              <th mat-header-cell *matHeaderCellDef class="table-column-header">  Interprete(s) </th>
               <td mat-cell *matCellDef="let cancion" class="table-value"> {{cancion.interprete}} </td>
             </ng-container>
 
             <ng-container matColumnDef= "duracion">
-              <th mat-header-cell *matHeaderCellDef class="table-column-header"> Precio </th>
-              <td mat-cell *matCellDef="let cancion" class="table-value"> <p>{{cancion.minutos}} minutos : {{ cancion.segundos }} segundos</p> </td>
+              <th mat-header-cell *matHeaderCellDef class="table-column-header"> Duración </th>
+              <td mat-cell *matCellDef="let cancion" class="table-value table-column-padding"> <p>{{cancion.minutos}} minutos : {{ cancion.segundos }} segundos</p> </td>
             </ng-container>
 
             <ng-container matColumnDef= "usuariosCompartidos">
@@ -54,7 +54,43 @@
       <mat-expansion-panel >
         <mat-expansion-panel-header>
           <mat-panel-title>
-            Mis Albumes
+             Mis Canciones Favoritas
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <table mat-table [dataSource]="cancionesFavoritas"  class="mat-elevation-z8 table-content">
+          <ng-container matColumnDef="titulo">
+            <th mat-header-cell *matHeaderCellDef class="table-column-header"> Título </th>
+            <td mat-cell *matCellDef="let cancion" class="table-value"> {{cancion.titulo}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="interprete">
+            <th mat-header-cell *matHeaderCellDef class="table-column-header">  Interprete(s) </th>
+            <td mat-cell *matCellDef="let cancion" class="table-value"> {{cancion.interprete}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef= "duracion">
+            <th mat-header-cell *matHeaderCellDef class="table-column-header"> Duración </th>
+            <td mat-cell *matCellDef="let cancion" class="table-value table-column-padding "> <p>{{cancion.minutos}} minutos : {{ cancion.segundos }} segundos</p> </td>
+          </ng-container>
+
+          <ng-container matColumnDef="acciones">
+            <th mat-header-cell *matHeaderCellDef class="table-column-header"> Acciones </th>
+            <td mat-cell *matCellDef="let cancion"  class="table-value">
+              <button type="button" class="btn btn-outline-warning me-2" (click)="goToDeleteFavorite(cancion.id)" title="Eliminar de favoritos"><i class="bi bi-star-fill"></i></button>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="columnasFavoritas"></tr>
+          <tr mat-row *matRowDef="let row; columns: columnasFavoritas;"></tr>
+        </table>
+      </mat-expansion-panel>
+    </mat-accordion>
+
+    <mat-accordion>
+      <mat-expansion-panel >
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            Mis Albumes Agregados
           </mat-panel-title>
         </mat-expansion-panel-header>
           <table mat-table [dataSource]="albumesUsuario"  class="mat-elevation-z8 table-content">
@@ -70,7 +106,7 @@
 
             <ng-container matColumnDef= "duracion">
               <th mat-header-cell *matHeaderCellDef class="table-column-header"> Descripción </th>
-              <td mat-cell *matCellDef="let album" class="table-value"> <p>{{album.descripcion}}</p> </td>
+              <td mat-cell *matCellDef="let album" class="table-value table-column-padding"> <p>{{album.descripcion}}</p> </td>
             </ng-container>
 
             <ng-container matColumnDef= "usuariosCompartidos">

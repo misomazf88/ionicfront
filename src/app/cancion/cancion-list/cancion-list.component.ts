@@ -12,7 +12,7 @@ import { ToastrService } from 'ngx-toastr';
 export class CancionListComponent implements OnInit {
 
   constructor(
-    private cancionService: CancionService,
+    private songService: CancionService,
     private routerPath: Router,
     private router: ActivatedRoute,
     private toastr: ToastrService
@@ -20,10 +20,10 @@ export class CancionListComponent implements OnInit {
 
   userId: number
   token: string
-  canciones: Array<Cancion>
-  mostrarCanciones: Array<Cancion>
-  cancionSeleccionada: Cancion
-  indiceSeleccionado: number = 0
+  songs: Array<Cancion>
+  showSongs: Array<Cancion>
+  selectedSong: Cancion
+  indexSelected: number = 0
 
   ngOnInit() {
     if(!parseInt(this.router.snapshot.params.userId) || this.router.snapshot.params.userToken === " "){
@@ -32,47 +32,80 @@ export class CancionListComponent implements OnInit {
     else{
       this.userId = parseInt(this.router.snapshot.params.userId)
       this.token = this.router.snapshot.params.userToken
-      this.getCanciones();
+      this.getSongs();
     }
   }
 
-  getCanciones():void{
-    this.cancionService.getCanciones()
-    .subscribe(canciones => {
-      this.canciones = canciones
-      this.mostrarCanciones = canciones
-      this.onSelect(this.mostrarCanciones[0], 0)
+  getSongs():void{
+    this.songService.getSongs()
+    .subscribe(songs => {
+      this.songs = songs
+      this.showSongs = songs
+      this.onSelect(this.showSongs[0], 0)
     })
   }
 
   onSelect(cancion: Cancion, indice: number){
-    this.indiceSeleccionado = indice
-    this.cancionSeleccionada = cancion
-    this.cancionService.getAlbumesCancion(cancion.id)
+    this.indexSelected = indice
+    cancion.favorite = this.validateFavoriteSong(cancion)
+    this.selectedSong = cancion
+    this.songService.getAlbumesCancion(cancion.id)
     .subscribe(albumes => {
-      this.cancionSeleccionada.albumes = albumes
+      this.selectedSong.albumes = albumes
     },
     error => {
       this.showError(`Ha ocurrido un error: ${error.message}`)
     })
-    
+
   }
 
-  buscarCancion(busqueda: string){
-    let cancionesBusqueda: Array<Cancion> = []
-    this.canciones.map( cancion => {
-      if(cancion.titulo.toLocaleLowerCase().includes(busqueda.toLocaleLowerCase())){
-        cancionesBusqueda.push(cancion)
+  validateFavoriteSong(cancion: Cancion) {
+    let result = false
+    for (let i in cancion.usuariosFavoritos) {
+      if (cancion.usuariosFavoritos[i] == this.userId) {
+        result = true
+      }
+    }
+    return result
+  }
+
+  searchSong(search: string){
+    let songsSearch: Array<Cancion> = []
+    this.songs.map( song => {
+      if(song.titulo.toLocaleLowerCase().includes(search.toLocaleLowerCase())){
+        songsSearch.push(song)
       }
     })
-    this.mostrarCanciones = cancionesBusqueda
+    this.showSongs = songsSearch
   }
 
   eliminarCancion(){
-    this.cancionService.eliminarCancion(this.cancionSeleccionada.id)
+    this.songService.eliminarCancion(this.selectedSong.id)
     .subscribe(cancion => {
       this.ngOnInit()
       this.showSuccess()
+    },
+    error=> {
+      this.showError("Ha ocurrido un error. " + error.message)
+    })
+  }
+
+  addFavoriteSong(){
+    this.songService.addFavoriteSong(this.selectedSong, this.userId)
+    .subscribe(resp => {
+      this.ngOnInit()
+      this.showSuccessFavorite()
+    },
+    error=> {
+      this.showError("Ha ocurrido un error. " + error.message)
+    })
+  }
+
+  deleteFavoriteSong(){
+    this.songService.deleteFavoriteSong(this.selectedSong.id, this.userId)
+    .subscribe(resp => {
+      this.ngOnInit()
+      this.showSuccessDeleteFavorite()
     },
     error=> {
       this.showError("Ha ocurrido un error. " + error.message)
@@ -89,6 +122,14 @@ export class CancionListComponent implements OnInit {
 
   showSuccess() {
     this.toastr.success(`La canción fue eliminada`, "Eliminada exitosamente");
+  }
+
+  showSuccessFavorite() {
+    this.toastr.success(`La canción fue agregada a favoritos`, "Agregada exitosamente");
+  }
+
+  showSuccessDeleteFavorite() {
+    this.toastr.success(`La canción fue eliminada de favoritos`, "Eliminada exitosamente");
   }
 
 }

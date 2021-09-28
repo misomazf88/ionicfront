@@ -11,6 +11,8 @@ export class CancionDetailComponent implements OnInit {
 
   @Input() cancion: Cancion;
   @Output() deleteCancion = new EventEmitter();
+  @Output() addFavoriteSong = new EventEmitter();
+  @Output() deleteFavoriteSong = new EventEmitter();
 
   userId: number;
   token: string;
@@ -23,7 +25,6 @@ export class CancionDetailComponent implements OnInit {
   ngOnInit() {
     this.userId = parseInt(this.router.snapshot.params.userId)
     this.token = this.router.snapshot.params.userToken
-    
   }
 
   eliminarCancion(){
@@ -32,6 +33,14 @@ export class CancionDetailComponent implements OnInit {
 
   goToEdit(){
     this.routerPath.navigate([`/canciones/edit/${this.cancion.id}/${this.userId}/${this.token}`])
+  }
+
+  goToAddFavorite(){
+    this.addFavoriteSong.emit(this.cancion.id)
+  }
+
+  goToDeleteFavorite(){
+    this.deleteFavoriteSong.emit(this.cancion.id)
   }
 
 }
